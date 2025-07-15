@@ -3,11 +3,12 @@
 #include "leet/leet.h"
 
 int main() {
-    testOOP();
+    // testOOP();
 
-    testAddTwoSum();
-    testLongestString();
-    testMedianOfTwoNumbers();
+    // testAddTwoSum();
+    // testLongestString();
+    // testMedianOfTwoNumbers();
+    testLongestPalindrome();
 
     return 0;
 }

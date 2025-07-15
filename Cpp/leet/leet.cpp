@@ -197,6 +197,43 @@ double findMedianSortedArrays(std::vector<int>& nums1, std::vector<int>& nums2) 
 }
 
 
+std::string palindromCheck(std::string *base_string,                      
+                           int start, int end) {
+    int i=start;
+    int j = end;
+    while(i < j) {
+        if(base_string->at(i) != base_string->at(j)) {
+            return std::string();
+        }
+
+        i++;
+        j--;
+    }
+
+    return base_string->substr(start, end-start+1);
+}
+
+std::string longestPalindrome(std::string base_string) {
+    std::string longest;
+
+    if(base_string.size() == 1) {
+        return base_string;
+    }
+
+    for(int i=0;i<base_string.size()-1;i++) {
+        for(int j=base_string.size()-1;j>i;j--) {
+            std::string result= palindromCheck(&base_string, i,j);
+            if(result.size() > longest.size()) {
+                longest = result;
+            }
+        }
+    }
+
+    return longest;
+}
+
+
+
 // Test code
 void testAddTwoSum() {
     const std::list<int> l1 = {1,2,3,4,5,6,7,8};
@@ -275,4 +312,31 @@ void testMedianOfTwoNumbers() {
     // Add more test cases as needed based on the scenarios above.
 
     std::cout << "All tests passed (assuming assertions are uncommented and function is implemented)." << std::endl;
+}
+
+void runSingleTestOfLongestPalindrome(std::string test_string, 
+                                      std::string expected_result) {
+    std::string result = longestPalindrome(test_string);
+    std::cout << "Longest Palindrome of " << test_string << " is " << result << std::endl;
+    assert(result == expected_result);
+    
+}
+
+void testLongestPalindrome() {
+    runSingleTestOfLongestPalindrome("babad","bab");
+    runSingleTestOfLongestPalindrome("cbbd","bb");
+    runSingleTestOfLongestPalindrome("a","a");
+    runSingleTestOfLongestPalindrome("abcdedcba","abcdedcba");
+    runSingleTestOfLongestPalindrome("aaaaa","aaaaa");
+    runSingleTestOfLongestPalindrome("aaaa","aaaa");
+    runSingleTestOfLongestPalindrome("abcba","abcba");
+    runSingleTestOfLongestPalindrome("forgeeksskeegfor","geeksskeeg");
+    runSingleTestOfLongestPalindrome("a1234321b","1234321");
+
+    std::string test_string;
+    for(int i=0;i<100;i++) {
+        test_string += "abc";
+    }
+    test_string += "racecar" + test_string;
+    runSingleTestOfLongestPalindrome(test_string, "racecar");
 }

@@ -10,4 +10,5 @@
 void testAddTwoSum();
 void testLongestString();
 void testMedianOfTwoNumbers();
+void testLongestPalindrome();
 #endif // LEET_LEET_H
