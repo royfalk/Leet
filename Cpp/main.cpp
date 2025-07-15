@@ -1,6 +1,6 @@
 
 #include "language_issues/oop.h"
-#include "leet/leet.h"
+#include "leet/leet_test.h"
 
 int main() {
     // testOOP();
@@ -8,7 +8,7 @@ int main() {
     // testAddTwoSum();
     // testLongestString();
     // testMedianOfTwoNumbers();
-    testLongestPalindrome();
-
+    //testLongestPalindrome();
+    testZigZag();
     return 0;
 }

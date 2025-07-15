@@ -11,4 +11,6 @@ add_executable(MyProject
     language_issues/oop.h
     leet/leet.cpp
     leet/leet.h
+    leet/leet_test.cpp
+    leet/leet_test.h
 )

@@ -232,111 +232,33 @@ std::string longestPalindrome(std::string base_string) {
     return longest;
 }
 
+std::string zigZag(std::string input_string, int num_rows) {
+    std::vector<std::string> rows;
 
-
-// Test code
-void testAddTwoSum() {
-    const std::list<int> l1 = {1,2,3,4,5,6,7,8};
-    const std::list<int> l2 = {8,7,6,5,4,3,2,1};
-    const std::list<int> expected_result = {9,9,9,9,9,9,9,9};
-    const std::list<int> result = addTwoNumbers(l1, l2);
-    if(expected_result == result) {
-        std::cout << "addTwoNumbers ran successfully.\n";
-    } else {
-        std::cout << "addTwoNumbers failed to run successfully.\n";
+    if(num_rows == 1) {
+        return input_string;
     }
 
-    const std::list<int> l3 = {9,9,9};
-    const std::list<int> l4 = {9,9,9,3};
-    const std::list<int> expected_result_2 = {8,9,9,4};
-    const std::list<int> result_2 = addTwoNumbers(l3, l4);
-    if(expected_result_2 == result_2) {
-        std::cout << "2 addTwoNumbers ran successfully.\n";
-    } else {
-        std::cout << "2 addTwoNumbers failed to run successfully.\n";
+    for(int i=0;i<num_rows;i++) {
+        rows.push_back(std::string());
     }
-}
 
-void testLongestString() {
-    std::string s1 = "abcabcbb";
-    std::string s2 = "bbbbb";
-    std::string s3 = "pwwkew";
-    std::cout << longestSubstring(s1) << std::endl;
-    std::cout << longestSubstring(s2) << std::endl;
-    std::cout << longestSubstring(s3) << std::endl;
-}
-
-void runSingleTestOfMedianOfTwoNumbers(std::vector<int> nums1, 
-                                       std::vector<int> nums2,
-                                       double expected_result) {
-    std::string str1 = std::accumulate(nums1.begin(), nums1.end(), std::string(),
-                                         [](const std::string& a, int b) {
-                                             return a + std::to_string(b);
-                                         });
-    std::string str2 = std::accumulate(nums2.begin(), nums2.end(), std::string(),
-                                         [](const std::string& a, int b) {
-                                             return a + std::to_string(b);
-                                         });
-    double result = findMedianSortedArrays(nums1, nums2);
-    std::cout << "result for {" << str1 << "}, {" << str2 << "} = " << result << " (" << expected_result << ")"<<std::endl;
-    assert(result == expected_result);
-    std::cout << "test ran successfully\n";
-}
-
-void testMedianOfTwoNumbers() {
-    // Test Case 1: Basic odd total
-    std::vector<int> nums1_1 = {1, 3};
-    std::vector<int> nums2_1 = {2};
-    // runSingleTestOfMedianOfTwoNumbers(nums1_1, nums2_1, 2);
-    
-    // Test Case 2: Basic even total
-    std::vector<int> nums1_2 = {1, 2};
-    std::vector<int> nums2_2 = {3, 4};
-    // runSingleTestOfMedianOfTwoNumbers(nums1_2, nums2_2, 2.5);
-    
-    // Test Case 3: Empty nums1
-    std::vector<int> nums1_3 = {};
-    std::vector<int> nums2_3 = {1};
-    // runSingleTestOfMedianOfTwoNumbers(nums1_3, nums2_3, 1.0);
-    
-    // Test Case 4: One array significantly larger
-    std::vector<int> nums1_4 = {1, 2, 3, 4, 5};
-    std::vector<int> nums2_4 = {6};
-    runSingleTestOfMedianOfTwoNumbers(nums1_4, nums2_4, 3.5);
-    
-    // Test Case 5: Overlapping ranges
-    std::vector<int> nums1_5 = {1, 5, 9};
-    std::vector<int> nums2_5 = {2, 6, 10};
-    runSingleTestOfMedianOfTwoNumbers(nums1_5, nums2_5, 5.5);
-    
-    // Add more test cases as needed based on the scenarios above.
-
-    std::cout << "All tests passed (assuming assertions are uncommented and function is implemented)." << std::endl;
-}
-
-void runSingleTestOfLongestPalindrome(std::string test_string, 
-                                      std::string expected_result) {
-    std::string result = longestPalindrome(test_string);
-    std::cout << "Longest Palindrome of " << test_string << " is " << result << std::endl;
-    assert(result == expected_result);
-    
-}
-
-void testLongestPalindrome() {
-    runSingleTestOfLongestPalindrome("babad","bab");
-    runSingleTestOfLongestPalindrome("cbbd","bb");
-    runSingleTestOfLongestPalindrome("a","a");
-    runSingleTestOfLongestPalindrome("abcdedcba","abcdedcba");
-    runSingleTestOfLongestPalindrome("aaaaa","aaaaa");
-    runSingleTestOfLongestPalindrome("aaaa","aaaa");
-    runSingleTestOfLongestPalindrome("abcba","abcba");
-    runSingleTestOfLongestPalindrome("forgeeksskeegfor","geeksskeeg");
-    runSingleTestOfLongestPalindrome("a1234321b","1234321");
-
-    std::string test_string;
-    for(int i=0;i<100;i++) {
-        test_string += "abc";
+    int mod = 1;
+    int i = 0;
+    for(const char c : input_string) {
+        rows[i]+=c;
+        if(mod == 1 && i == num_rows -1) {
+            mod = -1;
+        } else if(mod == -1 && i == 0) {
+            mod = 1;
+        }
+        i += mod;
     }
-    test_string += "racecar" + test_string;
-    runSingleTestOfLongestPalindrome(test_string, "racecar");
+
+    std::string result;
+    for(const std::string& s :  rows) {
+        result += s;
+    }
+
+    return result;
 }
