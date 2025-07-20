@@ -3,6 +3,7 @@
 #include <iostream>
 #include <numeric>
 #include <assert.h>
+#include <cstdint>
 
 // Test code
 void testAddTwoSum() {
@@ -130,3 +131,81 @@ void testZigZag() {
     runSingleTestOfZigZag(all_x, 15, all_x);
 }
 
+void testSingleReverseInteger(int number, int expected_result) {
+    int result = reverseInteger(number);
+    std::cout << "reverseInteger of " << number << " is " << result << std::endl;
+    assert(result == expected_result);
+}
+
+void testReverseInteger() {
+    testSingleReverseInteger(123, 321);
+    testSingleReverseInteger(-123, -321);
+    testSingleReverseInteger(120, 21);
+    testSingleReverseInteger(0, 0);
+    testSingleReverseInteger(1000000003, 0);
+    testSingleReverseInteger(-1000000003, 0);
+    testSingleReverseInteger(3223, 3223);
+    testSingleReverseInteger(-3223, -3223);
+    testSingleReverseInteger(2147483647, 0);
+    testSingleReverseInteger(-2147483647, 0);
+}
+
+void testSingleStringToInt(std::string number_string, int expected_result) {
+    int result = stringToInteger(number_string);
+    std::cout << "stringToInteger of " << number_string << " is " << result << std::endl;
+    assert(result == expected_result);
+}
+
+void testStringToInt() {
+    testSingleStringToInt("42", 42);
+    testSingleStringToInt("-42", -42);
+    testSingleStringToInt("   +042", 42);
+    testSingleStringToInt("   -042", -42);
+    testSingleStringToInt("   0-42", 0);
+    testSingleStringToInt("4193 with words", 4193);
+    testSingleStringToInt("words and 987", 0);
+    testSingleStringToInt("-91283472332", INT32_MIN);
+    testSingleStringToInt("91283472332", INT32_MAX);
+}
+
+void testSinglePalindromeNumber(int number, bool expected_result) {
+    bool result = palindromeNumber(number);
+    std::cout << "palindromeNumber of " << number << " is " << result << std::endl;
+    assert(result == expected_result);
+}
+
+void testPalidromeNumber() {
+    testSinglePalindromeNumber(121,true);
+    testSinglePalindromeNumber(0,true);
+    testSinglePalindromeNumber(1001,true);
+    testSinglePalindromeNumber(12344321,true);
+    testSinglePalindromeNumber(123404321,true);
+    testSinglePalindromeNumber(123,false);
+    testSinglePalindromeNumber(-121,false);
+    testSinglePalindromeNumber(10,false);
+    testSinglePalindromeNumber(-101,false);
+    testSinglePalindromeNumber(100,false);
+}
+
+void testSingleRegex(std::string text, std::string regex, bool expected_result) {
+    bool result = recursiveMatchRegex(text, regex);
+    std::cout << "recursiveMatchRegex of " << text << " and " << regex << " is " << result << std::endl;
+    assert(result == expected_result);
+}
+
+void testRegex() {
+    testSingleRegex("aa", "a", false);
+    testSingleRegex("aa", "a*", true);
+    testSingleRegex("ab", ".*", false);
+    testSingleRegex("aaa", "c*a*b", false);
+    testSingleRegex("mississippi", "mis*is*p*.", false);
+    testSingleRegex("", ".*", true);
+    testSingleRegex("", "", true);
+    testSingleRegex("a", ".*", false);
+    testSingleRegex("aaa", "ab*a*c*a", true);
+    testSingleRegex("abcd", "d*", false);
+    testSingleRegex("abc", ".*c", false);
+    testSingleRegex("a", "ab*", true);
+    testSingleRegex(std::string(100,'a'), "a*", true);
+    testSingleRegex(std::string(100,'a') + 'b', "a*b", true);
+}

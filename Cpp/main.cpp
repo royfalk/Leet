@@ -9,6 +9,10 @@ int main() {
     // testLongestString();
     // testMedianOfTwoNumbers();
     //testLongestPalindrome();
-    testZigZag();
+    // testZigZag();
+    //testReverseInteger();
+    // testStringToInt();
+    // testPalidromeNumber();
+    testRegex();
     return 0;
 }

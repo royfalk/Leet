@@ -6,5 +6,9 @@ void testLongestString();
 void testMedianOfTwoNumbers();
 void testLongestPalindrome();
 void testZigZag();
+void testReverseInteger();
+void testStringToInt();
+void testPalidromeNumber();
+void testRegex();
 
 #endif // LEET_LEET_TEST_H

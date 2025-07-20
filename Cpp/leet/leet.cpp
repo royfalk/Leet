@@ -4,6 +4,9 @@
 #include <assert.h>
 #include <algorithm>
 #include <numeric>
+#include <limits>
+#include <cstdint>
+
 
 std::pair<int, int> twoSum(const std::vector<int>& nums, int target) {
     for(int i=0;i<nums.size();i++) {
@@ -262,3 +265,183 @@ std::string zigZag(std::string input_string, int num_rows) {
 
     return result;
 }
+
+
+int reverseInteger(int number) {
+    int reverse = 0;
+
+    std::vector<int> digits;
+
+    if(number == 0) return 0;
+
+    while(number !=0) {
+        digits.push_back(number % 10);
+        number /= 10;
+    }
+
+    int new_number = 0;
+
+    for(int digit : digits) {
+        // Overflow checks
+        bool had_overflow = __builtin_mul_overflow(new_number, 10, &new_number);
+        if(had_overflow) return 0;
+        
+        had_overflow = __builtin_add_overflow(new_number, digit, &new_number);
+        if(had_overflow) return 0;
+    }
+
+    return new_number;
+}
+
+int stringToInteger(std::string number_string) {
+    int number = 0;
+    int sign = 1;
+
+    bool prefix_spaces = true;
+    bool sign_found = false;
+    bool leading_zeros = true;
+
+
+    for(char digit : number_string) {
+        if(digit == ' ' && prefix_spaces) {
+            continue;
+        }
+
+        prefix_spaces = false;
+
+        if(digit == '-' && !sign_found) {
+            sign_found = true;
+            sign = -1;
+            continue;
+        }
+
+        if(digit == '+' && !sign_found) {
+            sign_found = true;
+            continue;
+        }
+
+        sign_found = true;
+
+        if(digit == '0' && leading_zeros) {
+            continue;
+        }
+
+        leading_zeros = false;
+
+        if(digit < '0' || digit > '9') {
+            return number;
+        }
+
+        int int_digit = digit - '0';
+
+        bool had_overflow = __builtin_mul_overflow(number, 10, &number);
+        if(had_overflow) {
+            if(sign == 1) {
+                return INT32_MAX;
+            } else {
+                return INT32_MIN;
+            }
+        }
+        
+        had_overflow = __builtin_add_overflow(number, (int_digit * sign), &number);
+        if(had_overflow) {
+            if(sign == 1) {
+                return INT32_MAX;
+            } else {
+                return INT32_MIN;
+            }
+        }
+    }
+
+    return number;
+}
+
+bool palindromeNumber(int number) {
+    if(number < 0) return false;
+
+    std::vector<int> digits;
+
+    do {
+        if(number == 0) {
+            break;
+        }
+
+        int digit = number % 10;
+        number /= 10;
+        digits.push_back(digit);
+    } while(true);
+
+    int start = 0;
+    int end = digits.size()-1;
+    while(start < end) {
+        int low_digit = digits[start];
+        int high_digit = digits[end];
+        
+        if(low_digit != high_digit) return false;
+        start++;
+        end--;
+    }
+
+    return true;
+}
+
+
+bool recursiveMatchRegex(std::string text, std::string regex) {
+    int regex_len = regex.size();
+
+    // Stop Conditions
+    if(text.empty()) {
+        if(regex_len == 0) {
+            // Classic "" == ""
+            return true;
+        } else if(regex_len == 1) {
+            // Leftover asterisk. Previous step was "x" == "x*"
+            return regex[0] == '*';
+        } else if(regex[1] == '*' && regex[0] != '*') {
+            // Possible case of "" == "x*"
+            regex = regex.substr(2, regex.size()-2);
+            return recursiveMatchRegex(text, regex);
+        } else
+        
+        // Default mismatch - false
+        return false;
+    }
+
+    // Standard match    
+    if(regex[0]==text[0]) {
+        text = text.substr(1, text.size()-1);
+        if(regex_len>1 && regex[1]=='*') {
+            // Asterisk option - here we try with and without the asterisk to deal 
+            // with the following: text=aaa regex=ab*a*c*a
+            bool option1 = recursiveMatchRegex(text, regex);
+            regex = regex.substr(2, regex.size()-2);
+            bool option2 = recursiveMatchRegex(text, regex);
+            return option1 || option2;
+        } else {
+            regex = regex.substr(1, regex.size()-1);
+            return recursiveMatchRegex(text, regex);
+        }
+    }
+
+    // dot match
+    char current_char = text[0];
+    if('.'==text[0]) {
+        text = text.substr(1, text.size()-1);
+        if(regex_len>1 && regex[1]=='*') {
+            regex[0] = current_char;
+            return recursiveMatchRegex(text, regex);
+        } else {
+            regex = regex.substr(1, regex.size()-1);
+            return recursiveMatchRegex(text, regex);
+        }
+    }
+
+    // Can't match, but this would work if first two chars of regex are <something>*
+    if(regex_len>1 && regex[1]=='*') {
+        regex = regex.substr(2, regex.size()-2);
+        return recursiveMatchRegex(text, regex);
+    }
+
+    return false;
+}
+
