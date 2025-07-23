@@ -16,5 +16,7 @@ int stringToInteger(std::string number_string);
 bool palindromeNumber(int number);
 bool recursiveMatchRegex(std::string text, std::string regex);
 int containerWithMostWater(std::vector<int>& heights);
+std::string convertIntToRoman(int number);
+int convertRomanToInt(std::string roman);
 
 #endif // LEET_LEET_H

@@ -236,3 +236,50 @@ void testContainerWithMostWater() {
     height = {10, 9, 8, 7, 6, 5, 4};
     testSingleContainerWithMostWater(height, "[10, 9, 8, 7, 6, 5, 4]", 25);
 }
+
+void testSingleRoman(int number, std::string expected_result) {
+    std::string result = convertIntToRoman(number);
+    std::cout << "convertIntToRoman of " << number << " is " << result << std::endl;
+    assert(result == expected_result);
+
+    // A bit ugly, as we're reusing the parameters in the opposite direction
+    int number_result = convertRomanToInt(expected_result);
+    std::cout << "convertRomanToInt of " << expected_result << " is " << number_result << std::endl;
+    assert(number == number_result);
+}
+
+void testRoman() {
+    struct RomanTestCase {
+        int number;
+        std::string expected_result;
+    };
+
+    RomanTestCase test_cases[] = {
+        {1, "I"},
+        {2, "II"},
+        {3, "III"},
+        {4, "IV"},
+        {5, "V"},
+        {6, "VI"},
+        {7, "VII"},
+        {8, "VIII"},
+        {9, "IX"},
+        {10, "X"},
+        {11, "XI"},
+        {14, "XIV"},
+        {15, "XV"},
+        {40, "XL"},
+        {58, "LVIII"},
+        {90, "XC"},
+        {400, "CD"},
+        {900, "CM"},
+        {621, "DCXXI"},
+        {1994, "MCMXCIV"},
+        {3888, "MMMDCCCLXXXVIII"},
+        {3999, "MMMCMXCIX"}
+    };
+
+    for(const auto& test : test_cases) {
+        testSingleRoman(test.number, test.expected_result);
+    }
+}

@@ -480,3 +480,109 @@ int containerWithMostWater(std::vector<int>& heights) {
 
     return max_area;
 }
+
+void loopRoman(int& number, std::string& roman, std::string letter, int value) {
+    while(number>=value) {
+        roman += letter;
+        number -= value;
+    }
+}
+
+void romanFourFiveNine(int& number, std::string& roman, int divider,
+                       std::string four_letter, std::string five_letter, 
+                       std::string nine_letter) {
+    int digits = number/divider;
+    switch(digits) {
+        case 4:
+            roman += four_letter;
+            number -= 4 * divider;
+            digits -= 4;
+            break;
+        case 9: 
+            roman += nine_letter;
+            number -= 9 * divider;
+            digits -= 9;
+            break;
+    }
+
+    // Must happen after nine, or we get XIIII instead of IX
+    if(digits >= 5) {
+        roman += five_letter;
+        number -= 5 * divider;
+    }
+}
+
+std::string convertIntToRoman(int number) {
+    if(number<=0) {
+        number = 1;
+    } else if(number>=4000) {
+        number = 3999;
+    }
+
+    std::string roman;
+
+    loopRoman(number, roman, "M", 1000);
+    romanFourFiveNine(number, roman, 100, "CD", "D", "CM");
+    loopRoman(number, roman, "C", 100);
+    romanFourFiveNine(number, roman, 10, "XL", "L", "XC");
+    loopRoman(number, roman, "X", 10);
+    romanFourFiveNine(number, roman, 1, "IV", "V", "IX");
+    loopRoman(number, roman, "I", 1);
+    
+    return roman;
+}
+
+int convertRomanToInt(std::string roman) {
+    int number = 0;
+
+    struct RomanException {
+        std::string two_letters;
+        int value;
+    };
+
+    RomanException roman_exceptions[] = {
+        {"CD", 400},
+        {"CM", 900},
+        {"XL", 40},
+        {"XC", 90},
+        {"IV", 4},
+        {"IX", 9},
+    };
+
+    while(!roman.empty()) {
+        if(roman.size() > 1) {
+            const std::string two_letters = roman.substr(0,2);
+            bool found = false;
+            for(RomanException roman_exception : roman_exceptions) {
+                if(two_letters == roman_exception.two_letters) {
+                    found = true;
+                    number += roman_exception.value;
+                    break;
+                }
+            }
+
+            if(found) {
+                roman = roman.substr(2,roman.size()-2);
+                continue;
+            }
+        }
+
+        char c = roman[0];
+
+        switch(c) {
+            case 'I': number++; break;
+            case 'V': number+=5; break;
+            case 'X': number+=10; break;
+            case 'L': number+=50; break;
+            case 'C': number+=100; break;
+            case 'D': number+= 500; break;
+            case 'M': number+= 1000; break;
+            default:
+            assert(0);
+        }
+
+        roman = roman.substr(1,roman.size()-1);
+    }
+
+    return number;
+}

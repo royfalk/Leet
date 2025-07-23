@@ -11,5 +11,6 @@ void testStringToInt();
 void testPalidromeNumber();
 void testRegex();
 void testContainerWithMostWater();
+void testRoman();
 
 #endif // LEET_LEET_TEST_H
