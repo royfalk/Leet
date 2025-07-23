@@ -10,5 +10,6 @@ void testReverseInteger();
 void testStringToInt();
 void testPalidromeNumber();
 void testRegex();
+void testContainerWithMostWater();
 
 #endif // LEET_LEET_TEST_H

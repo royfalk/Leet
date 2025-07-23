@@ -209,3 +209,30 @@ void testRegex() {
     testSingleRegex(std::string(100,'a'), "a*", true);
     testSingleRegex(std::string(100,'a') + 'b', "a*b", true);
 }
+
+void testSingleContainerWithMostWater(std::vector<int>& heights, std::string height_text, int expected_area) {
+    int result = containerWithMostWater(heights);
+    std::cout << "containerWithMostWater of " << height_text << " is " << result << std::endl;
+    assert(result == expected_area);
+}
+
+void testContainerWithMostWater() {
+    std::vector<int> height = {1,8,6,2,5,4,8,3,7};
+    testSingleContainerWithMostWater(height, "[1,8,6,2,5,4,8,3,7]", 49);
+    height = {1,1};
+    testSingleContainerWithMostWater(height, "[1,1]", 1);
+    height = {100};
+    testSingleContainerWithMostWater(height, "[100]", 0);
+    height = {};
+    testSingleContainerWithMostWater(height, "[]", 0);
+    height = {4, 3, 2, 1, 4};
+    testSingleContainerWithMostWater(height, "[4, 3, 2, 1, 4]", 16);
+    height = {1, 2, 1};
+    testSingleContainerWithMostWater(height, "[1, 2, 1]", 2);
+    height = std::vector<int>(10000, 5);
+    testSingleContainerWithMostWater(height, "[5 ... 5]", 49995);
+    height = {1, 3, 2, 5, 25, 24, 5};
+    testSingleContainerWithMostWater(height, "[1, 3, 2, 5, 25, 24, 5]", 24);
+    height = {10, 9, 8, 7, 6, 5, 4};
+    testSingleContainerWithMostWater(height, "[10, 9, 8, 7, 6, 5, 4]", 25);
+}

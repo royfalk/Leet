@@ -445,3 +445,38 @@ bool recursiveMatchRegex(std::string text, std::string regex) {
     return false;
 }
 
+int containerWithMostWater(std::vector<int>& heights) {
+    if(heights.size() < 2) {
+        return 0;
+    }
+
+    int max_i=-1;
+    int max_area=-1;
+
+    for(int i=0;i<heights.size()-1;i++) {
+        if(max_i>heights[i]) {
+            continue;
+        } else {
+            max_i = heights[i];
+        }
+
+        int max_j=-1;
+
+        for(int j=heights.size()-1;j>i;j--) {
+            if(max_j>heights[j]) {
+                continue;
+            } else {
+                max_j = heights[j];
+            }
+
+            int distance = j-i;
+            int area = std::min(heights[i], heights[j]) * distance;
+
+            if(area>max_area) {
+                max_area = area;
+            }
+        }
+    }
+
+    return max_area;
+}
