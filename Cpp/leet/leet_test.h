@@ -12,5 +12,12 @@ void testPalidromeNumber();
 void testRegex();
 void testContainerWithMostWater();
 void testRoman();
+void testLongestPrefix();
+void testThreesomes();
+void testThresomeClosest();
+void testLetterCombinations();
+void testFourSome();
+void testMergeKSortedLists();
+int testReverseNodeKGroup();
 
 #endif // LEET_LEET_TEST_H

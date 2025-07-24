@@ -6,6 +6,7 @@
 #include <numeric>
 #include <limits>
 #include <cstdint>
+#include <map>
 
 
 std::pair<int, int> twoSum(const std::vector<int>& nums, int target) {
@@ -585,4 +586,235 @@ int convertRomanToInt(std::string roman) {
     }
 
     return number;
+}
+
+
+std::string longestCommonPrefix(const std::vector<std::string> strings) {
+    std::string prefix;
+
+    for(int i=0; i < 200;i++) {
+        char c = -1;
+
+        for(const std::string& s : strings) {
+            // We've reached the end of this string. Exit the function.
+            if(i == s.size()) {
+                return prefix;
+            }
+
+            // First string in loop. Just assign to c
+            if(c==-1) {
+                c = s[i];
+                continue;
+            }
+
+            // Exit condition - chars are not the same at this index.
+            if(c!=s[i]) {
+                return prefix;
+            }
+        }
+
+        prefix += c;
+    }
+
+    return prefix;
+}
+
+std::vector<std::vector<int>> threeSome(std::vector<int>& numbers) {
+    std::map<std::string, std::vector<int>> three_somes;
+    
+    // Too small edge case
+    if(numbers.size()<3) {
+        return std::vector<std::vector<int>>();
+    }
+    
+    for(int i=0;i<numbers.size()-2;i++) {
+        for(int j=i+1;j<numbers.size()-1;j++) {
+            for(int k=j+1;k<numbers.size();k++) {
+                if(numbers[i]+numbers[j]+numbers[k] == 0) {
+                    std::vector<int> three_some = {numbers[i], numbers[j], numbers[k]};
+                    std::sort(three_some.begin(), three_some.end());
+                    std::string key;
+                    std::for_each(three_some.begin(), three_some.end(), [&key](int n) {
+                        key += std::to_string(n) + "|"; // Ugly but should work.
+                    });
+
+                    key = key.substr(0, key.size()-1); // Get rid of last |
+
+                    if (!three_somes.count(key)) {
+                        three_somes[key] = three_some;
+                    }
+                }
+            }
+        }    
+    }
+
+    std::vector<std::vector<int>> three_somes_vector;
+
+    for( std::map<std::string, std::vector<int>>::iterator it = three_somes.begin(); it != three_somes.end(); ++it ) {
+        three_somes_vector.push_back( it->second );
+    }
+
+    return three_somes_vector;
+}
+
+
+int threeSomeClosest(std::vector<int>& numbers, int target) {
+    int closest_value = 1000000;
+    int distance = 1000000;
+    
+    for(int i=0;i<numbers.size()-2;i++) {
+        for(int j=i+1;j<numbers.size()-1;j++) {
+            for(int k=j+1;k<numbers.size();k++) {
+                int current_value = numbers[i]+numbers[j]+numbers[k];
+                int current_distance = std::abs(target-current_value);
+                
+                if(current_distance == 0) {
+                    return current_value;
+                }
+                
+                if(current_distance < distance) {
+                    distance = current_distance;
+                    closest_value = current_value;
+                }
+            }
+        }    
+    }
+
+    return closest_value;
+}
+
+// This is a recursion
+std::vector<std::string> letterCombinations(std::string digits) {
+    std::vector<std::string> combinations;
+    int indices[] = {0,3,6,9,12,15,19,22};
+
+    for(char c : digits) {
+        std::vector<std::string> new_combinations;
+
+        int limit = (c == '9' || c == '7' ? 4 : 3);
+        char start = 'a' + indices[c - '2'];
+        for(char i=0;i<limit;i++) {
+            if(combinations.empty()) {
+                std::string new_combination(1, start + i);
+                new_combinations.push_back(new_combination);
+            } else for(std::string combination :  combinations) {
+                char new_letter = start + i;
+                std::string new_combination = combination + new_letter;
+                new_combinations.push_back(new_combination);
+            }
+        }
+
+        combinations = new_combinations;
+    }
+    
+
+    return combinations;
+}
+
+
+std::vector<std::vector<int>> fourSome(std::vector<int>& numbers, int target) {
+    std::map<std::string, std::vector<int>> four_somes;
+    
+    // Too small edge case
+    if(numbers.size()<4) {
+        return std::vector<std::vector<int>>();
+    }
+    
+    for(int i=0;i<numbers.size()-3;i++) {
+        for(int j=i+1;j<numbers.size()-2;j++) {
+            for(int k=j+1;k<numbers.size()-1;k++) {
+                for(int l=k+1;l<numbers.size();l++) {
+                    if(numbers[i]+numbers[j]+numbers[k]+numbers[l] == target) {
+                        std::vector<int> four_some = {numbers[i], numbers[j], numbers[k], numbers[l]};
+                        std::sort(four_some.begin(), four_some.end());
+                        std::string key;
+                        std::for_each(four_some.begin(), four_some.end(), [&key](int n) {
+                            key += std::to_string(n) + "|"; // Ugly but should work.
+                        });
+
+                        key = key.substr(0, key.size()-1); // Get rid of last |
+
+                        if (!four_somes.count(key)) {
+                            four_somes[key] = four_some;
+                        }
+                    }
+                }
+            }
+        }    
+    }
+
+    std::vector<std::vector<int>> four_somes_vector;
+
+    for( std::map<std::string, std::vector<int>>::iterator it = four_somes.begin(); it != four_somes.end(); ++it ) {
+        four_somes_vector.push_back( it->second );
+    }
+
+    return four_somes_vector;
+}
+
+void removeEmptyLists(std::vector<std::list<int>>& lists) {
+    std::vector<int> empty_indices;
+
+    for(int i=0;i<lists.size();i++) {
+        if(lists[i].empty()) {
+            empty_indices.push_back(i);
+        }
+    }
+
+    for(int i=empty_indices.size()-1;i>=0;i--) {
+        lists.erase(lists.begin() + empty_indices[i]);
+    }
+}
+
+std::list<int> mergeLists(std::vector<std::list<int>> lists) {
+    std::list<int> return_list;
+
+    removeEmptyLists(lists);
+
+    while(!lists.empty()) {
+        int min_value = 1000000;
+        int min_index = -1;
+
+        for(int i=0;i<lists.size();i++) {
+            if(i==0) {
+                min_value = lists[0].front();
+                min_index = 0;
+            } else if(min_value > lists[i].front()) {
+                min_value = lists[i].front();
+                min_index = i;
+            }
+        }
+
+        return_list.push_back(min_value);
+        lists[min_index].pop_front();
+        if(lists[min_index].empty()) {
+            lists.erase(lists.begin() + min_index);
+        }
+    }
+
+    return return_list;
+}
+
+std::list<int> reverseNodesKGroup(std::list<int> list, int k) {
+    if(list.empty() || list.size() < k) {
+        return list;
+    }
+
+    std::list<int>::iterator it = list.begin();
+    
+    while(std::distance(it, list.end()) >= k) {
+        for(int i=1;i<k;i++) {
+            std::list<int>::iterator forward_it = it;
+            std::list<int>::iterator backward_it = it;
+            forward_it++;
+            for(int j=1;j<i;j++) backward_it--;
+            int value = *forward_it;
+            list.erase(forward_it);
+            list.insert(backward_it, value);
+        }
+
+        it++;
+    }
+
+    return list;
 }

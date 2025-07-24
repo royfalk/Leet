@@ -4,6 +4,8 @@
 #include <numeric>
 #include <assert.h>
 #include <cstdint>
+#include <algorithm>
+#include <set>
 
 // Test code
 void testAddTwoSum() {
@@ -283,3 +285,274 @@ void testRoman() {
         testSingleRoman(test.number, test.expected_result);
     }
 }
+
+void testSingleLongestPrefix(std::vector<std::string> strings, std::string expected_result) {
+    std::string result = longestCommonPrefix(strings);
+    std::cout << "longestCommonPrefix is " << result << std::endl;
+    assert(result == expected_result);
+}
+
+void testLongestPrefix() {
+    std::vector<std::pair<std::vector<std::string>, std::string>> test_cases = {
+        {{"flower", "flow", "flight"}, "fl"},
+        {{"dog", "racecar", "car"}, ""},
+        {{""}, ""},
+        {{"" ,"abc", "abd"}, ""},
+        {{"abc"}, "abc"},
+        {{"interstellar", "internet", "internal"}, "inter"},
+        {{"prefix", "preach", "present"}, "pre"},
+        {{"same", "same", "same"}, "same"},
+        {{"antidisestablishmentarianism", "antibiotic", "antique"}, "anti"},
+        {std::vector<std::string>(10000, "copilot"), "copilot"}
+    };
+
+    for (auto& [input, expected] : test_cases) {
+        testSingleLongestPrefix(input, expected);
+    }
+}
+
+// Utility to normalize triplet results for reliable comparison
+void normalize(std::vector<std::vector<int>>& triplets) {
+    for (auto& triplet : triplets) {
+        std::sort(triplet.begin(), triplet.end());
+    }
+    std::sort(triplets.begin(), triplets.end());
+}
+
+// Comparison helper
+bool equalTriplets(const std::vector<std::vector<int>>& a, const std::vector<std::vector<int>>& b) {
+    std::vector<std::vector<int>> copyA = a, copyB = b;
+    normalize(copyA);
+    normalize(copyB);
+    return copyA == copyB;
+}
+
+void testThreesomes() {
+    struct Test {
+        std::vector<int> input;
+        std::vector<std::vector<int>> expected;
+    };
+
+    std::vector<Test> tests = {
+        {{-1, 0, 1, 2, -1, -4}, {{-1, -1, 2}, {-1, 0, 1}}},
+        {{0, 1, 1}, {}},
+        {{0, 0, 0}, {{0, 0, 0}}},
+        {{-2, 0, 1, 1, 2}, {{-2, 0, 2}, {-2, 1, 1}}},
+        {{}, {}},
+        {{-1, 1}, {}},
+        {{-2, -2, 0, 0, 2, 2}, {{-2, 0, 2}}}
+    };
+
+    for (size_t i = 0; i < tests.size(); ++i) {
+        auto output = threeSome(tests[i].input);
+        assert(equalTriplets(output, tests[i].expected));
+        std::cout << "✅ Test " << i + 1 << " passed!" << std::endl;
+    }
+
+    std::cout << "🎉 All tests completed successfully!" << std::endl;
+}
+
+void testThresomeClosest() {
+    struct TestCase {
+        std::vector<int> nums;
+        int target;
+        int expected;
+    };
+
+    std::vector<TestCase> tests = {
+        {{-1, 2, 1, -4}, 1, 2},                     // -1 + 2 + 1 = 2
+        {{0, 0, 0}, 1, 0},                          // Only one triplet: 0 + 0 + 0 = 0
+        {{1, 1, -1, -1, 3}, -1, -1},                // Closest sum: -1 + -1 + 1 = -1
+        {{1, 2, 5, 10, 11}, 12, 13},                // 1 + 2 + 10 = 13
+        {{1, 2, 3, 4, 5}, 10, 10},                  // 2 + 3 + 5 = 10
+        {{-3, -2, -5, 3, -4}, -1, -2}               // Best: -2 + -4 + 3 = -3 or -5 + 3 + -2 = -4
+    };
+
+    for (size_t i = 0; i < tests.size(); ++i) {
+        int result = threeSomeClosest(tests[i].nums, tests[i].target);
+        assert(result == tests[i].expected);
+        std::cout << "✅ Test " << i + 1 << " passed!" << std::endl;
+    }
+
+    std::cout << "🎉 All tests completed successfully!" << std::endl;
+}
+
+bool equalSets(const std::vector<std::string>& a, 
+               const std::vector<std::string>& b) {
+    std::set<std::string> sa(a.begin(), a.end());
+    std::set<std::string> sb(b.begin(), b.end());
+    return sa == sb;
+}
+
+void testLetterCombinations() {
+    struct TestCase {
+        std::string digits;
+        std::vector<std::string> expected;
+    };
+
+    std::vector<TestCase> tests = {
+        {"2", {"a", "b", "c"}},
+        {"23", {"ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"}},
+        {"", {}},
+        {"7", {"p", "q", "r", "s"}},
+        {"9", {"w", "x", "y", "z"}},
+        {"234", {
+            "adg","adh","adi","aeg","aeh","aei","afg","afh","afi",
+            "bdg","bdh","bdi","beg","beh","bei","bfg","bfh","bfi",
+            "cdg","cdh","cdi","ceg","ceh","cei","cfg","cfh","cfi"
+        }}
+    };
+
+    for (size_t i = 0; i < tests.size(); ++i) {
+        auto result = letterCombinations(tests[i].digits);
+        assert(equalSets(result, tests[i].expected));
+        std::cout << "✅ Test " << i + 1 << " passed!" << std::endl;
+    }
+
+    std::cout << "🎉 All tests passed successfully!" << std::endl;
+}
+
+void normalize4(std::vector<std::vector<int>>& quads) {
+    for (auto& quad : quads) {
+        sort(quad.begin(), quad.end());
+    }
+    sort(quads.begin(), quads.end());
+}
+
+// Compare two sets of quadruplets
+bool equalQuadruplets(const std::vector<std::vector<int>>& a, 
+                      const std::vector<std::vector<int>>& b) {
+    std::vector<std::vector<int>> copyA = a, copyB = b;
+    normalize4(copyA);
+    normalize4(copyB);
+    return copyA == copyB;
+}
+
+void testFourSome() {
+    struct TestCase {
+        std::vector<int> nums;
+        int target;
+        std::vector<std::vector<int>> expected;
+    };
+
+    std::vector<TestCase> tests = {
+        {{1, 0, -1, 0, -2, 2}, 0, {
+            {-2, -1, 1, 2}, {-2, 0, 0, 2}, {-1, 0, 0, 1}
+        }},
+        {{2, 2, 2, 2, 2}, 8, {
+            {2, 2, 2, 2}
+        }},
+        {{-3, -1, 0, 2, 4, 5}, 2, {
+            {-3, -1, 2, 4}
+        }},
+        {{}, 0, {}},
+        {{1, 2, 3, 4}, 100, {}},
+        {{0, 0, 0, 0}, 0, {{0, 0, 0, 0}}}
+    };
+
+    for (size_t i = 0; i < tests.size(); ++i) {
+        auto output = fourSome(tests[i].nums, tests[i].target);
+        assert(equalQuadruplets(output, tests[i].expected));
+        std::cout << "✅ Test " << i + 1 << " passed!" << std::endl;
+    }
+
+    std::cout << "🎉 All tests passed successfully!" << std::endl;
+}
+
+// Utility function to compare two std::list<int>
+bool areEqual(const std::list<int>& a, const std::list<int>& b) {
+    return std::equal(a.begin(), a.end(), b.begin(), b.end());
+}
+
+void testMergeKSortedLists() {
+    struct TestCase {
+        std::vector<std::list<int>> input;
+        std::list<int> expected;
+    };
+
+    std::vector<TestCase> tests = {
+        {
+            {
+                {1, 4, 5},
+                {1, 3, 4},
+                {2, 6}
+            },
+            {1, 1, 2, 3, 4, 4, 5, 6}
+        },
+        {
+            {
+                {},
+                {},
+                {}
+            },
+            {}
+        },
+        {
+            {
+                {5, 10, 15}
+            },
+            {5, 10, 15}
+        },
+        {
+            {
+                {1, 3, 5},
+                {},
+                {2, 4, 6}
+            },
+            {1, 2, 3, 4, 5, 6}
+        },
+        {
+            {
+                {2},
+                {2},
+                {2}
+            },
+            {2, 2, 2}
+        }
+    };
+
+    for (std::size_t i = 0; i < tests.size(); ++i) {
+        std::list<int> result = mergeLists(tests[i].input);
+        assert(areEqual(result, tests[i].expected));
+        std::cout << "✅ Test " << i + 1 << " passed!" << std::endl;
+    }
+
+    std::cout << "🎉 All tests completed successfully!" << std::endl;
+}
+
+// Utility: Print list contents
+void printList(const std::list<int>& lst) {
+    for (int val : lst) {
+        std::cout << val << " ";
+    }
+    std::cout << "\n";
+}
+
+int testReverseNodeKGroup() {
+    struct TestCase {
+        std::list<int> input;
+        int k;
+        std::list<int> expected;
+    };
+
+    std::vector<TestCase> tests = {
+        {{1, 2, 3, 4, 5}, 2, {2, 1, 4, 3, 5}},
+        {{1, 2, 3, 4, 5}, 3, {3, 2, 1, 4, 5}},
+        {{1, 2, 3}, 1, {1, 2, 3}},               // k = 1 → no change
+        {{1, 2, 3, 4}, 4, {4, 3, 2, 1}},          // full reversal
+        {{1, 2, 3, 4, 5, 6}, 2, {2, 1, 4, 3, 6, 5}},
+        {{}, 3, {}},                             // empty list
+        {{1}, 2, {1}},                           // not enough nodes to reverse
+        {{10, 20, 30}, 3, {30, 20, 10}}
+    };
+
+    for (std::size_t i = 0; i < tests.size(); ++i) {
+        std::list<int> result = reverseNodesKGroup(tests[i].input, tests[i].k);
+        assert(areEqual(result, tests[i].expected));
+        std::cout << "✅ Test " << i + 1 << " passed.\n";
+    }
+
+    std::cout << "🎉 All test cases completed successfully!\n";
+    return 0;
+}
+

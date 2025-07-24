@@ -2,7 +2,9 @@
 #include "language_issues/oop.h"
 #include "leet/leet_test.h"
 
-#include "language_issues/const.h";
+#include "language_issues/const.h"
+
+#include <iostream>
 
 int main() {
     // testOOP();
@@ -17,7 +19,14 @@ int main() {
     // testPalidromeNumber();
     // testRegex();
     //testContainerWithMostWater();
-    testRoman();
-
+    // testRoman();
+    // testLongestPrefix();
+    // testThreesomes();
+    // testThresomeClosest();
+    // testLetterCombinations();
+    // testFourSome();
+    // testMergeKSortedLists();
+    testReverseNodeKGroup();
+    
     return 0;
 }
