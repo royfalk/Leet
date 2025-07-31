@@ -26,7 +26,9 @@ int main() {
     // testLetterCombinations();
     // testFourSome();
     // testMergeKSortedLists();
-    testReverseNodeKGroup();
-    
+    // testReverseNodeKGroup();
+    // testSubstringWithConcatOfWords();
+    // testLongestValidParentheses();
+    testTrapWater();
     return 0;
 }

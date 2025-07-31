@@ -7,7 +7,7 @@
 #include <limits>
 #include <cstdint>
 #include <map>
-
+#include <set>
 
 std::pair<int, int> twoSum(const std::vector<int>& nums, int target) {
     for(int i=0;i<nums.size();i++) {
@@ -817,4 +817,180 @@ std::list<int> reverseNodesKGroup(std::list<int> list, int k) {
     }
 
     return list;
+}
+
+// Substring with Concatenation of All Words
+std::vector<int> findSubstring(const std::string s, const std::vector<std::string>& words) {
+    // Some sanity checks
+    // Is s even long enough?
+    int total_length = std::accumulate(words.begin(), words.end(), static_cast<size_t>(0),
+                                   [](size_t sum, const std::string& s) {
+                                       return sum + s.size();
+                                   });
+    
+    std::vector<int> indices;
+    std::vector<std::string> local_words = words;
+    int word_length = words[0].size();
+
+    if(total_length > s.size()) {
+        return std::vector<int>();
+    }
+
+    // Histograms
+    int histogram_s[26] = {};
+    int histogram_w[26] = {};
+
+    for(int i=0;i<total_length;i++) {
+        char c = s[i];
+        histogram_s[c-'a']++;
+    }
+    
+    for(const std::string& word : words) {
+        for(const char c : word) histogram_w[c-'a']++;
+    }
+
+    for(int i=0;i<=s.size() - total_length;i++) {
+        // We've reached to close to the end - stop
+        if(i+word_length == s.size()) break;
+
+        std::string substring = s.substr(i, total_length);
+
+        // modify existing histogram
+        if(i>0) {
+            char c = s[i-1];
+            histogram_s[c-'a']--;
+            c = s[i+total_length-1];
+            histogram_s[c-'a']++;
+        }
+
+        // Compare histograms
+        bool histograms_equal = true;
+        for(int j=0;j<26;j++) {
+            if(histogram_s[j] != histogram_w[j]) {
+                histograms_equal = false;
+                break;
+            }
+        }
+
+        std::cout << i << " "  << substring << std::endl;
+        for(int h : histogram_s) std::cout << h;
+        std::cout << std::endl;
+        for(int h : histogram_w) std::cout << h;
+        std::cout << std::endl;
+
+        if(!histograms_equal) continue;
+
+        std::vector<std::string> temp_words = words;
+        
+
+        for(int j = 0; j< substring.size(); j+= word_length) {
+            std::string sub_substring = substring.substr(j, word_length);
+            std::erase_if(temp_words, [sub_substring](const std::string& str) { return str == sub_substring; });
+        }
+
+        if(temp_words.empty()) {
+            indices.push_back(i);
+        }
+    }
+    
+    return indices;
+}
+
+
+int recursiveLongestValidParentheses(const std::string &s, int i, int j, 
+                                     int level, bool side_by_side) {
+    // We only check these if we haven't had a case
+    // of enclosing parentheses
+    if(side_by_side) {
+        // () to the right
+        if(j<s.size()-1 && s[j] == '(' && s[j+1] == ')') 
+            return recursiveLongestValidParentheses(s, i, j+2, level+1, true);
+
+        // () to the left
+        if(i>0 && s[i-1] == '(' && s[i] == ')')
+            return recursiveLongestValidParentheses(s, i-2, j, level+1, true);
+    }
+    
+    // Stop condition
+    if(i == -1 || j == s.size()) return level;
+
+    if(s[i] == ')' || s[j] == '(') return level;
+    return recursiveLongestValidParentheses(s, i-1, j+1, level+1, false);
+}
+
+int longestValidParentheses(const std::string &s) {
+    int max = 0;
+    int target = s.size()-1;
+    for(int i=0;i<target;i++) {
+        if(s[i] == ')' || s[i+1] == '(') continue;
+
+        int current = recursiveLongestValidParentheses(s, i-1, i+2, 1, true);
+        if(current > max) max = current;
+    }
+
+    return max * 2;
+}
+
+
+int firstMissingPositive(const std::vector<int>& numbers) {
+    int min_number = -1;
+    int max_number = -1;
+    int sum_positive = 0;
+
+    for(const int &number : numbers) {
+        if(number > max_number) max_number = number;
+        if(min_number == -1) min_number = number;
+        else if(number < min_number) min_number = number;
+        if(number > 0) sum_positive += number;
+    }
+
+    std::cout << min_number << " " << max_number << " " << sum_positive << std::endl;
+}
+
+
+int findRight(std::vector<int>& heights, int height, int start) {
+    int max_height = 0;
+    int index_height=-1;
+    for(int i=start;i<heights.size();i++) {
+        // Stop Condition - we found a local max 
+        if(heights[i] >= height) return i;
+
+        // Continue condition - we already have a higher peak
+        if(heights[i]<=max_height) continue;
+
+        max_height = heights[i];
+        index_height = i;
+    }
+
+    return index_height;
+}
+
+int calculateWater(std::vector<int>& heights, int height, int start, int end) {
+    int water = height * (end-start+1);
+    for(int i=start;i<=end;i++) {
+        water -= heights[i];
+    }
+    return water;
+}
+
+int trapWater(std::vector<int>& heights) {
+    if(heights.size() < 3) {
+        return 0;
+    }
+
+    int water = 0;
+
+    for(int i=0;i<heights.size();i++) {
+        int height = heights[i];
+        int end = findRight(heights, height, i+1);
+
+        if(end!=-1) {
+            int min_height = std::min(height, heights[end]);
+            int local_water = calculateWater(heights, min_height, i+1, end-1);
+            i = end-1;
+            water += local_water;
+        }
+    }
+
+    return water;
 }

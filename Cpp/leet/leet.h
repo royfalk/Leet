@@ -25,5 +25,8 @@ std::vector<std::string> letterCombinations(std::string digits);
 std::vector<std::vector<int>> fourSome(std::vector<int>& numbers, int target);
 std::list<int> mergeLists(std::vector<std::list<int>> lists);
 std::list<int> reverseNodesKGroup(std::list<int> list, int k);
+std::vector<int> findSubstring(const std::string s, const std::vector<std::string>& words);
+int longestValidParentheses(const std::string &s);
+int trapWater(std::vector<int>& heights);
 
 #endif // LEET_LEET_H

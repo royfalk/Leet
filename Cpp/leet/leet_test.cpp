@@ -556,3 +556,93 @@ int testReverseNodeKGroup() {
     return 0;
 }
 
+void testSubstringWithConcatOfWords() {
+    struct TestCase {
+        std::string s;
+        std::vector<std::string> words;
+        std::vector<int> expected;
+    };
+
+    std::vector<TestCase> tests = {
+        {"barfoothefoobarman", {"foo", "bar"}, {0, 9}},
+        {"wordgoodgoodgoodbestword", {"word", "good", "best", "word"}, {}},
+        {"barfoofoobarthefoobarman", {"bar","foo","the"}, {6, 9, 12}},
+        {"", {"foo", "bar"}, {}},
+        {"foobarfoobar", {"foo", "bar"}, {0, 3, 6}},
+        {"aaaaaaaaaaaaaa", {"aa", "aa", "aa"}, {0, 1, 2, 3, 4, 5, 6, 7, 8}},
+        {"lingmindraboofooowingdingbarrwingmonkeypoundcake", 
+         {"fooo","barr","wing","ding","wing"}, {13}},
+        {"abcd", {"a", "b", "c", "d"}, {0}},
+        {"abcdef", {"gh", "ij"}, {}}
+    };
+
+    for (std::size_t i = 0; i < tests.size(); ++i) {
+        std::vector<int> result = findSubstring(tests[i].s, tests[i].words);
+        assert(result == tests[i].expected);
+
+        std::cout << "✅ Test " << i + 1 << " passed!\n";
+    }
+
+    std::cout << "🎉 All tests completed successfully!\n";
+}
+
+void testLongestValidParentheses() {
+    struct TestCase {
+        std::string input;
+        int expected;
+    };
+
+    std::vector<TestCase> tests = {
+        {"", 0},
+        {"(", 0},
+        {")", 0},
+        {"()", 2},
+        {"(()", 2},
+        {")()())", 4},
+        {"(()())", 6},
+        {"()(()", 2},
+        {"(()(((()", 2},
+        {"((()))", 6},
+        {"(()()(()", 4},
+        {"(()())())", 6},
+        {"())(())", 4},
+    };
+
+    for (std::size_t i = 0; i < tests.size(); ++i) {
+        int result = longestValidParentheses(tests[i].input);
+        assert(result == tests[i].expected);
+        std::cout << "✅ Test " << i + 1 << " passed.\n";
+    }
+
+    std::cout << "🎉 All test cases completed successfully!\n";
+}
+
+void testTrapWater() {
+    struct TestCase {
+        std::vector<int> input;
+        int expected;
+    };
+
+    std::vector<TestCase> tests = {
+        {{0,1,0,2,1,0,1,3,2,1,2,1}, 6},
+        {{4,2,0,3,2,5}, 9},
+        {{2,0,2}, 2},
+        {{3,0,0,2,0,4}, 10},
+        {{}, 0},
+        {{1}, 0},
+        {{5,4,1,2}, 1},
+        {{2,1,0,1,2}, 4},
+        {{0,0,0,0}, 0},
+        {{1,2,3,4,5}, 0},
+        {{5,4,3,2,1}, 0}
+    };
+
+    for (std::size_t i = 0; i < tests.size(); ++i) {
+        int result = trapWater(tests[i].input);
+        assert(result == tests[i].expected);
+        std::cout << "✅ Test " << i + 1 << " passed.\n";
+    }
+
+    std::cout << "🎉 All tests completed successfully!\n";
+}
+

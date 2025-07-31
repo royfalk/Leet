@@ -19,5 +19,8 @@ void testLetterCombinations();
 void testFourSome();
 void testMergeKSortedLists();
 int testReverseNodeKGroup();
+void testSubstringWithConcatOfWords();
+void testLongestValidParentheses();
+void testTrapWater();
 
 #endif // LEET_LEET_TEST_H
