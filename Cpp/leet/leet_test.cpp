@@ -646,3 +646,71 @@ void testTrapWater() {
     std::cout << "🎉 All tests completed successfully!\n";
 }
 
+void testFirstPositive() {
+    struct TestCase {
+        std::vector<int> input;
+        int expected;
+    };
+
+    std::vector<TestCase> tests = {
+        {{1, 2, 0}, 3},
+        {{3, 4, -1, 1}, 2},
+        {{7, 8, 9, 11, 12}, 1},
+        {{}, 1},
+        {{-1, -2, -3}, 1},
+        {{1}, 2},
+        {{2}, 1},
+        {{1, 1}, 2},
+        {{2, 2}, 1},
+        {{1, 2, 3, 4, 5}, 6},
+        {{5, 4, 3, 2, 1}, 6},
+        {{10, 1, 2, 3, 4, 5, 6, 7, 8, 9}, 11}
+    };
+
+    for (std::size_t i = 0; i < tests.size(); ++i) {
+        std::vector<int> inputCopy = tests[i].input; // Copy to preserve original
+        int result = firstMissingPositive(inputCopy);
+        assert(result == tests[i].expected);
+        std::cout << "✅ Test " << i + 1 << " passed.\n";
+    }
+
+    std::cout << "🎉 All tests completed successfully!\n";
+}
+
+
+
+void testWildcardMatching() {
+    struct TestCase {
+        std::string s;
+        std::string p;
+        bool expected;
+    };
+
+    std::vector<TestCase> tests = {
+        {"aa", "a", false},
+        {"aa", "*", true},
+        {"cb", "?a", false},
+        {"adceb", "*a*b", true},
+        {"acdcb", "a*c?b", false},
+        {"", "*", true},
+        {"", "?", false},
+        {"abc", "a?c", true},
+        {"abc", "a*", true},
+        {"abc", "*c", true},
+        {"abc", "*b", false},
+        {"abc", "*?c", true},
+        {"abc", "*?b", false},
+        {"abcde", "a*de", true},
+        {"abcde", "a*d?", true},
+        {"abcde", "a*d", false}
+    };
+
+    for (std::size_t i = 0; i < tests.size(); ++i) {
+        bool result = recursiveWildcardMatching(tests[i].s, tests[i].p);
+        assert(result == tests[i].expected);
+        std::cout << "✅ Test " << i + 1 << " passed.\n";
+    }
+
+    std::cout << "🎉 All tests completed successfully!\n";
+}
+

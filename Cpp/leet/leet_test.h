@@ -22,5 +22,7 @@ int testReverseNodeKGroup();
 void testSubstringWithConcatOfWords();
 void testLongestValidParentheses();
 void testTrapWater();
+void testFirstPositive();
+void testWildcardMatching();
 
 #endif // LEET_LEET_TEST_H

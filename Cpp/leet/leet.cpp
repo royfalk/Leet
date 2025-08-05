@@ -8,6 +8,7 @@
 #include <cstdint>
 #include <map>
 #include <set>
+#include <cmath>
 
 std::pair<int, int> twoSum(const std::vector<int>& nums, int target) {
     for(int i=0;i<nums.size();i++) {
@@ -932,22 +933,6 @@ int longestValidParentheses(const std::string &s) {
 }
 
 
-int firstMissingPositive(const std::vector<int>& numbers) {
-    int min_number = -1;
-    int max_number = -1;
-    int sum_positive = 0;
-
-    for(const int &number : numbers) {
-        if(number > max_number) max_number = number;
-        if(min_number == -1) min_number = number;
-        else if(number < min_number) min_number = number;
-        if(number > 0) sum_positive += number;
-    }
-
-    std::cout << min_number << " " << max_number << " " << sum_positive << std::endl;
-}
-
-
 int findRight(std::vector<int>& heights, int height, int start) {
     int max_height = 0;
     int index_height=-1;
@@ -993,4 +978,65 @@ int trapWater(std::vector<int>& heights) {
     }
 
     return water;
+}
+
+int firstMissingPositive(std::vector<int>& numbers) {
+    int max_set_size = std::pow(10,5);
+    std::set<int> numbers_set;
+    
+    // Trim numbers
+    while(!numbers.empty()) {
+        int number = numbers[0];
+        if(number>0 && number<max_set_size)
+            numbers_set.insert(number);
+        numbers.erase(numbers.begin());
+    }
+
+    for(int i=1;i<max_set_size;i++) {
+        if(!numbers_set.contains(i)) {
+            return i;
+        }
+    }
+}
+
+bool recursiveWildcardMatching(const std::string& input_string, 
+                               const std::string& pattern, 
+                               int string_position, 
+                               int pattern_position) {
+    // End condition
+    bool input_end = string_position == input_string.size();
+    bool pattern_end = pattern_position == pattern.size();
+    bool last_asterisk = (pattern_position == pattern.size()-1 && 
+                          pattern[pattern_position] == '*');
+    if(input_end) {
+        return pattern_end || last_asterisk;
+    } 
+
+    if(pattern_end) return false;
+
+    char input_char = input_string[string_position];
+    char pattern_char = pattern[pattern_position];
+
+    if(pattern_char == '*') {
+        // Ignore asterisk
+        bool ignore_asterisk_result = recursiveWildcardMatching(input_string, pattern, string_position, pattern_position+1);
+
+        // Do without moving pattern_position
+        bool result = recursiveWildcardMatching(input_string, pattern, 
+                                                string_position+1, pattern_position);
+
+        // Do without moving pattern_position
+        bool other_result = recursiveWildcardMatching(input_string, pattern, 
+                                                string_position+1, pattern_position);
+        
+        return result || other_result;
+    } else if(pattern_char == '?') {
+        return recursiveWildcardMatching(input_string, pattern, 
+                                        string_position+1, pattern_position+1);
+    } else if(pattern_char == input_char) {
+        return recursiveWildcardMatching(input_string, pattern, 
+                                        string_position+1, pattern_position+1);
+    } else {
+        return false;
+    }
 }

@@ -29,6 +29,9 @@ int main() {
     // testReverseNodeKGroup();
     // testSubstringWithConcatOfWords();
     // testLongestValidParentheses();
-    testTrapWater();
+    // testTrapWater();
+    // testFirstPositive();
+    testWildcardMatching();
+
     return 0;
 }

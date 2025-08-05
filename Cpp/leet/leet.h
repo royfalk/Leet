@@ -28,5 +28,9 @@ std::list<int> reverseNodesKGroup(std::list<int> list, int k);
 std::vector<int> findSubstring(const std::string s, const std::vector<std::string>& words);
 int longestValidParentheses(const std::string &s);
 int trapWater(std::vector<int>& heights);
-
+int firstMissingPositive(std::vector<int>& numbers);
+bool recursiveWildcardMatching(const std::string& input_string, 
+                               const std::string& pattern, 
+                               int string_position = 0, 
+                               int pattern_position = 0);
 #endif // LEET_LEET_H
